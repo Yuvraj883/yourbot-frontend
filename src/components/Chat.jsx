@@ -20,7 +20,7 @@ export default function Chat({ namespace, onNamespaceChange }) {
     listRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [messages, loading])
 
-  const canSend = useMemo(() => input.trim().length > 0 && !loading, [input, loading])
+  const canSend = useMemo(() => input.trim().length > 0 && !loading && ns.trim().length > 0, [input, loading, ns])
 
   async function onSend(e) {
     e.preventDefault()
@@ -78,10 +78,10 @@ export default function Chat({ namespace, onNamespaceChange }) {
         <form className="composer" onSubmit={onSend}>
           <input
             className="composer-input"
-            placeholder={'Ask something about your documents…'}
+            placeholder={ns ? 'Ask something about your documents…' : 'Set a namespace first…'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={false}
+            disabled={!ns}
           />
           <button className="btn primary" type="submit" disabled={!canSend}>
             Send

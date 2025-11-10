@@ -6,6 +6,9 @@ export async function ingestDocument({
   website,
   namespace,
 }) {
+  if (!namespace || !String(namespace).trim()) {
+    throw new Error('Namespace is required. Please provide a namespace.')
+  }
   const form = new FormData()
   form.append('file', file)
   form.append('organisation', organisation)
@@ -39,6 +42,9 @@ export async function ingestDocument({
 }
 
 export async function askQuestion({ question, namespace }) {
+  if (!namespace || !String(namespace).trim()) {
+    throw new Error('Namespace is required. Please set a namespace.')
+  }
   const payload = { question, namespace }
   console.log('[config] API_BASE =', API_BASE)
   console.log('[ask] POST', `${API_BASE}/ask`, payload)
