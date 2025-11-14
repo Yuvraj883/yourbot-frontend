@@ -10,7 +10,9 @@ export async function ingestDocument({
     throw new Error('Namespace is required. Please provide a namespace.')
   }
   const form = new FormData()
-  form.append('file', file)
+  if (file) {
+    form.append('file', file)
+  }
   form.append('organisation', organisation)
   form.append('website', website)
   form.append('namespace', namespace)

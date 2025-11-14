@@ -11,7 +11,7 @@ export default function UploadPanel({ onClose, onUploadedNamespace }) {
   const fileInputRef = useRef(null)
 
   const canSubmit = useMemo(() => {
-    return Boolean(file && organisation && website && namespace) && !submitting
+    return Boolean((file || website) && organisation && namespace) && !submitting
   }, [file, organisation, website, namespace, submitting])
 
   async function onSubmit(e) {
