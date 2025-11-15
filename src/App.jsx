@@ -36,7 +36,7 @@ export default function App() {
         <div className="header-left">
           <AppLogo />
           <h1>{headerTitle}</h1>
-        </div>
+        </div> 
         {!namespace && (
           <div className="header-right">
             <button className="btn ghost" onClick={() => setShowUpload(true)}>
