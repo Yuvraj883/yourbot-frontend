@@ -53,6 +53,8 @@ body {
 .app-main { display: flex; flex: 1; }
 
 .chat-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 16px; width: 100%; padding: 16px; }
+.chat-wrap-full { grid-template-columns: 1fr; padding: 0; }
+.chat-wrap-full .chat-main { border-radius: 0; border-left: none; border-right: none; }
 .chat-sidebar { display: flex; flex-direction: column; gap: 16px; }
 .sidebar-card {
   background: linear-gradient(180deg, rgba(17,24,39,1), rgba(17,24,39,.6));

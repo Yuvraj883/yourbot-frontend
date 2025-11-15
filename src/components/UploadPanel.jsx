@@ -1,11 +1,10 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { ingestDocument } from '../lib/api.js'
 
-export default function UploadPanel({ onClose, onUploadedNamespace }) {
+export default function UploadPanel({ namespace, onClose, onUploaded }) {
   const [file, setFile] = useState(null)
   const [organisation, setOrganisation] = useState('')
   const [website, setWebsite] = useState('')
-  const [namespace, setNamespace] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef(null)
@@ -21,7 +20,7 @@ export default function UploadPanel({ onClose, onUploadedNamespace }) {
     setError('')
     try {
       await ingestDocument({ file, organisation, website, namespace })
-      onUploadedNamespace?.(namespace)
+      onUploaded?.()
     } catch (err) {
       setError(err?.message || 'Upload failed')
     } finally {
@@ -74,9 +73,12 @@ export default function UploadPanel({ onClose, onUploadedNamespace }) {
             <input
               type="text"
               placeholder="your-namespace"
-              value={namespace}
-              onChange={(e) => setNamespace(e.target.value)}
+              value={namespace || ''}
+              disabled
             />
+            <p className="muted" style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+              Namespace is set from the URL path.
+            </p>
           </div>
 
           {!!error && <div className="error">{error}</div>}
