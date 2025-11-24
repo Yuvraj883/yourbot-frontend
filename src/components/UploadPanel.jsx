@@ -1,7 +1,11 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ingestDocument } from '../lib/api.js'
 
-export default function UploadPanel({ namespace, onClose, onUploaded }) {
+// 1. Rename the prop to defaultNamespace to distinguish from local state
+export default function UploadPanel({ namespace: defaultNamespace, onClose, onUploaded }) {
+  // 2. Initialize local state with the prop
+  const [namespace, setNamespace] = useState(defaultNamespace || '')
+  
   const [file, setFile] = useState(null)
   const [organisation, setOrganisation] = useState('')
   const [website, setWebsite] = useState('')
@@ -9,6 +13,14 @@ export default function UploadPanel({ namespace, onClose, onUploaded }) {
   const [error, setError] = useState('')
   const fileInputRef = useRef(null)
 
+  // Sync state if the prop changes (optional, useful if parent updates dynamically)
+  useEffect(() => {
+    if (defaultNamespace) {
+      setNamespace(defaultNamespace)
+    }
+  }, [defaultNamespace])
+
+  // 3. Update validation to check local 'namespace' state
   const canSubmit = useMemo(() => {
     return Boolean((file || website) && organisation && namespace) && !submitting
   }, [file, organisation, website, namespace, submitting])
@@ -19,6 +31,7 @@ export default function UploadPanel({ namespace, onClose, onUploaded }) {
     setSubmitting(true)
     setError('')
     try {
+      // 4. Send the local 'namespace' state to the API
       await ingestDocument({ file, organisation, website, namespace })
       onUploaded?.()
     } catch (err) {
@@ -68,16 +81,18 @@ export default function UploadPanel({ namespace, onClose, onUploaded }) {
             />
           </div>
 
+          {/* 5. Make the Namespace input editable */}
           <div className="form-row">
             <label>Namespace</label>
             <input
               type="text"
-              placeholder="your-namespace"
-              value={namespace || ''}
-              disabled
+              placeholder="Enter namespace"
+              value={namespace}
+              onChange={(e) => setNamespace(e.target.value)}
+              // Removed 'disabled' attribute
             />
             <p className="muted" style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-              Namespace is set from the URL path.
+              Define the namespace (index) for these documents.
             </p>
           </div>
 
@@ -94,4 +109,3 @@ export default function UploadPanel({ namespace, onClose, onUploaded }) {
     </div>
   )
 }
-
